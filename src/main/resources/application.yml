@@ -10,32 +10,44 @@ server:
 
 spring:
   application:
-    name: config-server
+    name: config-service
   lifecycle:
     timeout-per-shutdown-phase: 15s
   cloud:
     config:
       server:
         git:
-          # ?? ??? ?? ???? ??? ?? ? ??? URL
-          uri: https://github.com/cordingkid/config-repo
-          # ??? ? ??? ?? ????? main ????? ?? ???? ????.
+          uri: https://github.com/PolarBookshop/config-repo
           default-label: main
-          # ?? ??? ?? ?? ??
           timeout: 5
-          # ??? ??? ??? ???? ???? ??? ??
           clone-on-start: true
-          # ?? ???? ?? ???? ?? ?? ??? ?? ?????? ????
           force-pull: true
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
+
+info:
+  system: Polar Bookshop
 
 management:
   endpoints:
     web:
       exposure:
-        include: health
+        include: configprops, env, health, heapdump, info, loggers, mappings, prometheus
   endpoint:
     health:
       show-details: always
       show-components: always
       probes:
         enabled: true
+  info:
+    env:
+      enabled: true
+    java:
+      enabled: true
+    os:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
